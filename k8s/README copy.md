@@ -2,31 +2,33 @@
 
 To deploy your Kubernetes manifests, follow these steps:
 
-# Create Namespace:
+## Create Namespace
 Check the current namespaces in your cluster
 
 ``` kubectl get ns ```
-If needed, create a new namespace:
+
+If needed, create a new namespace as below:
+
 ```kubectl create ns application ```
 
-# Deploy Resources:
-Navigate to the main folder (e.g., kubernetes) and deploy your resources (Deployment and Service) in the application namespace:
+## Deploy Resources:
+Navigate to the root folder, Deploy manifests (Deployment & Service) and Verify logs: 
 
-``` cd k8s && \
-kubectl apply -f deployment.yaml -n application && \
-kubectl apply -f service.yaml -n application ```
+``` cd k8s ```
 
+``` kubectl apply -f deployment.yaml -n application ```
 
-# Verify Deployment logs:
- ``` kubectl logs pod/pod-name -n application```
+``` kubectl apply -f service.yaml -n application ```
 
- ![Alt text](image1.png)
+``` kubectl logs pod/pod-name -n application```
 
-# Ingress Setup
-## Deploy Nginx controller in the cluster 
+ ![Alt text](image-1.png)
+
+## Ingress Setup
+#### Deploy Nginx controller in the cluster 
 ``` kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml ```
 
-For more details, refer to Ingress Nginx Deployment Documentation.
+For more details, refer to Ingress Nginx Deployment Documentation[here][https://kubernetes.github.io/ingress-nginx/deploy/]
 This command will create a separate namespace named ingress-nginx. Verify the namespace again:
 ``` kubectl get ns ```
 
