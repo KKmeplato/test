@@ -1,103 +1,79 @@
-# Deployment of Kubernetes manifests
+# Deployment of Kubernetes Manifests
 
-``` kubectl get ns ``` -- to check current namespaces
-## Create separate namespace in cluster
+To deploy your Kubernetes manifests, follow these steps:
 
-``` kubectl create ns application ```
-
-Then deploy everything here in this namespace - Deployment, Service and Ingress 
-Make sure you are inside main folder- kubernetes 
+## Create Namespace
+Check the current namespaces in your cluster
 
 ``` 
+kubectl get ns
+```
+
+If needed, create a new namespace as below:
+
+```
+kubectl create ns application
+```
+
+## Deploy Resources:
+Navigate to the root folder, Deploy manifests (Deployment & Service) and Verify logs: 
+
+```
 cd k8s
 kubectl apply -f deployment.yaml -n application
-kubectl apply -f service.yaml -n application ```
+kubectl apply -f service.yaml -n application
+kubectl logs pod/pod-name -n application
 
-### Verify logs 
-``` kubectl apply -f deployment.yaml -n application ```
+```
+ ![Alt text](image-1.png)
 
-![Alt text](image1.png)
+## Ingress Setup
+#### Deploy Nginx controller in the cluster 
+``` 
+kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+```
 
+For more details, refer to Ingress Nginx Deployment Documentation [here](https://kubernetes.github.io/ingress-nginx/deploy/)
 
-Deployment is working fine for version 6.5.1
+This install will create a separate namespace named ingress-nginx.
 
-## Ingress 
+Verify the namespace again: ``` kubectl get ns ```
 
-## Deploy nginx-controller in cluster
-kubectl apply \
-    --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+## Apply Ingress: 
+``` 
+kubectl apply -f ingress.yaml -n application 
+```
 
-For more details[here](https://kubernetes.github.io/ingress-nginx/deploy/)
+### Verify 
 
-It will  create separate namespace "ingress-nginx" 
-Verify namespace again :
-``` kubectl get ns ```
-
-``` kubectl apply -f ingress.yaml -n application```
-
-``` curl http:///podinfo.wefox.localhost:80```
+``` 
+curl http:///podinfo.wefox.localhost:80
+```
 
 ![Alt text](image-2.png)
 
-# Wait for a while and reload the browser
-# Open http:///podinfo.wefox.localhost:80 in a browser
-![Alt text](image-3.png)
+#### Wait for a while and reload the browser
+Open http://podinfo.wefox.localhost:80 in a browser
 
-Deployment version 6.5.1 is deployed on port 80
+ ![Alt text](image-3.png)
 
-## Port forwarding to 8081
-``` kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8081:80 ```
+## Port Forwarding for 8081:
+``` 
+kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8081:80 
+```
 ![Alt text](image-4.png)
 
+## Update Deployment:
 
-## Update Deployment
-```
+``` 
 kubectl set image deployment/podinfo podinfo=stefanprodan/podinfo:6.5.3 --record=true -n application
-kubectl rollout  history deployment/podinfo -n application
-kubectl rollout  history deployment/podinfo --revision=2 -n application
+kubectl rollout history deployment/podinfo -n application
+kubectl rollout history deployment/podinfo --revision=2 -n application 
 ```
-
 ![Alt text](image-5.png)
 
-# Wait for a while and reload the browser 
-
+#### Wait for a while and reload 
+``` 
+http://podinfo.wefox.localhost:8081/ 
+```
 ![Alt text](image-6.png)
-
-``` http://podinfo.wefox.localhost:8081/```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Deployment.yaml
-This file contains the configuration about the application deployment, image name, version to be deployed 
-```
-kubectl apply -f deployment.yaml
-```
-## service.yaml
-
