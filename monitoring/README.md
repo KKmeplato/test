@@ -24,7 +24,7 @@ helm repo update
 
 ```
 
-#### Step3: Install Prometheus Kubernetes 
+### Step3: Install Prometheus Kubernetes 
 ```
 helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring
 
@@ -32,7 +32,7 @@ helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring
 
 ![Alt text](image.png)
 
-### Step 3: Kubernetes Prometheus Port Forward, Login to grafana
+### Step 4: Kubernetes Prometheus Port Forward, Login to grafana
 ```
 kubectl port-forward deployment/prometheus-grafana 3000
 ```
